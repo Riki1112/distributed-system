@@ -1,0 +1,81 @@
+services:
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_lb
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - app1
+      - app2
+    networks:
+      - backend
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+  app1:
+    build: ./app
+    container_name: app1
+    environment:
+      APP_NAME: SERVER_1
+    depends_on:
+      - redis
+      - db1
+      - db2
+    networks:
+      - backend
+
+  app2:
+    build: ./app
+    container_name: app2
+    environment:
+      APP_NAME: SERVER_2
+    depends_on:
+      - redis
+      - db1
+      - db2
+    networks:
+      - backend
+
+  db1:
+    image: mariadb:11
+    container_name: db1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: distributed_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db1_data:/var/lib/mysql
+    networks:
+      - backend
+
+  db2:
+    image: mariadb:11
+    container_name: db2
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: distributed_db
+    ports:
+      - "3308:3306"
+    volumes:
+      - db2_data:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  db1_data:
+  db2_data:
+
+networks:
+  backend:
