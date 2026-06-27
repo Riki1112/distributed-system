@@ -230,10 +230,29 @@ res.send(`
 
     .playlist{
 
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-        gap:20px;
-        margin-top:30px;
+        display:flex;
+        gap:15px;
+        margin-top:20px;
+        flex-wrap:wrap;
+
+    }
+
+    .playlist button{
+
+        background:#2563eb;
+        color:white;
+        border:none;
+        padding:12px 20px;
+        border-radius:10px;
+        cursor:pointer;
+        font-size:16px;
+        transition:0.3s;
+
+    }
+
+    .playlist button:hover{
+
+        background:#1d4ed8;
 
     }
 
@@ -284,9 +303,11 @@ res.send(`
 
 <h2>🎬 Now Playing</h2>
 
-<video controls preload="auto">
-
-<source src="/videos/teaser.mp4" type="video/mp4">
+<video id="player" controls preload="metadata">
+    <source
+        id="videoSource"
+        src="/videos/teaser.mp4"
+        type="video/mp4">
 
 </video>
 
@@ -310,10 +331,12 @@ video.addEventListener("timeupdate", () => {
 
     <div class="video-info">
 
-        <h2>Big Buck Bunny</h2>
-
+        <h2 id="judulVideo">
+            Toy Story 5 | Teaser Trailer | In Theaters June 19
+        </h2>
+        
         <p>
-            Video streaming menggunakan sistem Distributed System.
+            Video Player menggunakan sistem Distributed System.
         </p>
 
         <div class="badge">
@@ -328,116 +351,27 @@ video.addEventListener("timeupdate", () => {
             <b>Storage :</b> ${activeDB}
         </p>
 
+        <hr style="margin:30px 0;border:1px solid #334155;">
+
+        <h2>🎬 Playlist</h2>
+
+        <div class="playlist">
+
+            <button
+                onclick="changeVideo('teaser.mp4','Toy Story 5 | Teaser Trailer | In Theaters June 19')">
+                🎥 Toy Story 5
+            </button>
+
+            <button
+                onclick="changeVideo('spiderman.mp4','Spider-Man Trailer')">
+                🕷 Spider-Man
+            </button>
+
+        </div>
+
     </div>
 
 
-        <div class="grid" style="margin-top:20px;">
-
-                    <div class="card">
-
-                <h2>Total Views</h2>
-
-                <div class="value">
-                    ${total}
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <h2>Storage Server</h2>
-
-                <div class="value">
-                    ${activeDB || 'NONE'}
-                </div>
-
-                <div class="status online">
-                    CONNECTED
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <h2>Streaming Service</h2>
-
-                <div class="value">
-                    NGINX
-                </div>
-
-                <div class="status online">
-                    ACTIVE
-                </div>
-
-            </div>
-
-            <div class="card">
-
-                <h2>Infrastructure</h2>
-
-                <ul class="info-list">
-
-                    <li>2 App Servers</li>
-
-                    <li>2 MariaDB Databases</li>
-
-                    <li>Redis Distributed Counter</li>
-
-                    <li>Nginx Load Balancer</li>
-
-                    <li>Docker Containerization</li>
-
-                    <li>Failover System</li>
-
-                </ul>
-
-            </div>
-
-            <div class="card">
-
-                <h2>Technologies</h2>
-
-                <ul class="info-list">
-
-                    <li>Node.js</li>
-
-                    <li>Express.js</li>
-
-                    <li>MariaDB</li>
-
-                    <li>Redis</li>
-
-                    <li>Nginx</li>
-
-                    <li>Docker Compose</li>
-
-                </ul>
-
-            </div>
-
-            <div class="card">
-
-                <h2>High Availability Features</h2>
-
-                <ul class="info-list">
-
-                    <li>Automatic Server Failover</li>
-
-                    <li>Automatic Database Failover</li>
-
-                    <li>Distributed Request Counter</li>
-
-                    <li>Realtime Load Balancing</li>
-
-                    <li>Container Isolation</li>
-
-                    <li>Scalable Architecture</li>
-
-                </ul>
-
-            </div>
-
-        </div>
 
         <div class="footer">
 
@@ -446,6 +380,26 @@ video.addEventListener("timeupdate", () => {
         </div>
 
     </div>
+
+<script>
+
+function changeVideo(file, title){
+
+    const player = document.getElementById("player");
+
+    const source = document.getElementById("videoSource");
+
+    source.src = "/videos/" + file;
+
+    player.load();
+
+    player.play();
+
+    document.getElementById("judulVideo").innerText = title;
+
+}
+
+</script>
 
 </body>
 
