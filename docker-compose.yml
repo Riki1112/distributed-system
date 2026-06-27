@@ -2,7 +2,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx_lb
+    container_name: videoplayer
     ports:
       - "80:80"
     volumes:
@@ -15,7 +15,7 @@ services:
 
   redis:
     image: redis:7
-    container_name: redis
+    container_name: videoplayerredis
     ports:
       - "6379:6379"
     networks:
@@ -23,7 +23,7 @@ services:
 
   app1:
     build: ./app
-    container_name: app1
+    container_name: appsatu
     environment:
       APP_NAME: SERVER_1
     depends_on:
@@ -35,7 +35,7 @@ services:
 
   app2:
     build: ./app
-    container_name: app2
+    container_name: appdua
     environment:
       APP_NAME: SERVER_2
     depends_on:
@@ -47,7 +47,7 @@ services:
 
   db1:
     image: mariadb:11
-    container_name: db1
+    container_name: dbsatu
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -61,7 +61,7 @@ services:
 
   db2:
     image: mariadb:11
-    container_name: db2
+    container_name: dbdua
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root

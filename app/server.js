@@ -4,6 +4,8 @@ const redis = require('redis');
 
 const app = express();
 
+app.use(express.static('public'));
+
 const PORT = 3000;
 
 const APP_NAME = process.env.APP_NAME;
@@ -81,7 +83,7 @@ res.send(`
 
 <head>
 
-    <title>Distributed System Dashboard</title>
+    <title>Video Player</title>
 
     <style>
 
@@ -100,8 +102,8 @@ res.send(`
         }
 
         .container{
-
-            max-width:1200px;
+            width:95%;
+            max-width:1600px;
             margin:auto;
         }
 
@@ -183,6 +185,81 @@ res.send(`
             color:#64748b;
         }
 
+        .video-player{
+
+         margin-bottom:30px;
+
+        }
+
+.video-player video{
+
+    width:100%;
+    aspect-ratio:16 / 9;
+    max-height:500px;
+    border-radius:15px;
+    background:black;
+
+}
+
+}
+
+    }
+
+    .video-info{
+
+        margin-top:20px;
+
+    }
+
+    .video-info h2{
+
+        font-size:30px;
+        margin-bottom:10px;
+
+    }
+
+    .badge{
+
+        display:inline-block;
+        padding:8px 16px;
+        border-radius:30px;
+        background:#2563eb;
+        margin-top:10px;
+
+    }
+
+    .playlist{
+
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:20px;
+        margin-top:30px;
+
+    }
+
+    .play-card{
+
+        background:#1e293b;
+        border-radius:15px;
+        overflow:hidden;
+
+    }
+
+    .play-card img{
+
+        width:100%;
+        height:140px;
+        object-fit:cover;
+
+    }
+
+    .play-card h3{
+
+        padding:15px;
+        font-size:18px;
+
+    }
+
     </style>
 
 </head>
@@ -193,33 +270,72 @@ res.send(`
 
         <div class="title">
 
-            <h1>Distributed System Dashboard</h1>
+            <h1>Video Player</h1>
 
             <p>
-                High Availability System with Docker, Nginx, Redis, MariaDB, and Node.js
+                Watch your favorite videos anywhere.
             </p>
 
         </div>
 
         <div class="grid">
 
-            <div class="card">
+        <div class="card video-player">
 
-                <h2>Active Server</h2>
+<h2>🎬 Now Playing</h2>
 
-                <div class="value">
-                    ${APP_NAME}
-                </div>
+<video controls preload="auto">
 
-                <div class="status online">
-                    ONLINE
-                </div>
+<source src="/videos/teaser.mp4" type="video/mp4">
 
-            </div>
+</video>
 
-            <div class="card">
+<script>
 
-                <h2>Total Requests</h2>
+const video = document.querySelector("video");
+
+// Ambil posisi terakhir
+const lastTime = localStorage.getItem("videoTime");
+
+if(lastTime){
+    video.currentTime = parseFloat(lastTime);
+}
+
+// Simpan posisi setiap kali video berjalan
+video.addEventListener("timeupdate", () => {
+    localStorage.setItem("videoTime", video.currentTime);
+});
+
+</script>
+
+    <div class="video-info">
+
+        <h2>Big Buck Bunny</h2>
+
+        <p>
+            Video streaming menggunakan sistem Distributed System.
+        </p>
+
+        <div class="badge">
+            👁 ${total} Views
+        </div>
+
+        <p style="margin-top:20px;">
+            <b>Server :</b> ${APP_NAME}
+        </p>
+
+        <p>
+            <b>Storage :</b> ${activeDB}
+        </p>
+
+    </div>
+
+
+        <div class="grid" style="margin-top:20px;">
+
+                    <div class="card">
+
+                <h2>Total Views</h2>
 
                 <div class="value">
                     ${total}
@@ -229,7 +345,7 @@ res.send(`
 
             <div class="card">
 
-                <h2>Database Active</h2>
+                <h2>Storage Server</h2>
 
                 <div class="value">
                     ${activeDB || 'NONE'}
@@ -243,7 +359,7 @@ res.send(`
 
             <div class="card">
 
-                <h2>Load Balancer</h2>
+                <h2>Streaming Service</h2>
 
                 <div class="value">
                     NGINX
@@ -254,10 +370,6 @@ res.send(`
                 </div>
 
             </div>
-
-        </div>
-
-        <div class="grid" style="margin-top:20px;">
 
             <div class="card">
 
